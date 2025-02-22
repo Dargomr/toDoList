@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <main>
+        <h1 class="header">To-Do List</h1>
+        <div class="to-do">
+            <div class="upper">
+                <button class="delete-all-checked">delete all checked</button>
+                <button class="complete-all-checked">complete all checked</button>
+            </div>
+            <form class="input-add" id ='inputAdd' name ='inputAdd'>
+                <input class="input-field" type="text" name="inputField"/>
+                <input class="add-li-button" type="submit"></button>
+            </form>
+            <p class="error-msg">enter the action</p>
+            <ul class="to-do__ul">
+               <% ulActions.forEach((el) => { %>
+                    <li 
+                    <% if (el.done) { %>
+                        class="done"
+                    <% } %>
+                    data-uuid="<%= el.uuid %>">
+                    <input type="checkbox" class="li__checkbox"
+                    <% if (el.checked) { %>
+                        checked
+                    <% } %>
+                    >
+                    <p><%= el.action %></p>
+                    <button class="delete-button">удалить</button>    
+                </li>
+                <% }) %>
+            </ul>
+        </div>
+    </main>
+    <script src="js/scripts.js" ></script>
+</body>
+</html>
