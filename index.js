@@ -5,8 +5,6 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const upload = multer();
 const {v4 : uuidv4} = require('uuid');
-// const bodyParser = require('body-parser');
-// const { stringify } = require('querystring');
 
 const connectionUrl = 'mongodb://localhost:27017/toDo';
 mongoose.connect(connectionUrl);
@@ -30,8 +28,6 @@ app.use(express.json())
 
 app.use(express.urlencoded({ extended: true }))
 
-// app.use(bodyParser.urlencoded({extended: false}))
-
 app.get('/', async function(request, response) {
     const ulActions = Array.from(await Action.find());
     const data = {ulActions : ulActions}
@@ -40,7 +36,6 @@ app.get('/', async function(request, response) {
 
 app.post('/add', function(request, response) {
     try {
-        // console.debug(request.body)
         let obj = request.body;
         let uuid = uuidv4()
         let res = {
@@ -53,7 +48,6 @@ app.post('/add', function(request, response) {
             done: false, 
         })
 
-        // console.log(newAction)
         newAction.save();
         response.json(res)
     } catch(err) {
@@ -70,9 +64,7 @@ app.post('/check', async function(request, response) {
 })
 
 app.post('/checkCreate', async function(request, response) {
-    //найти поле checked по uuid из тела request и вернуть его//
     let res = await Action.find({uuid: request.body.uuid})
-    // console.log(res[0].checked)
     response.json(res[0].checked)
 })
 
@@ -91,4 +83,4 @@ app.post('/delete', async function(request, response) {
 })
 
 
-app.listen(4000, () => console.log('/huynya zapustilasb'))
+app.listen(3000, () => console.log('/huynya zapustilasb'))
