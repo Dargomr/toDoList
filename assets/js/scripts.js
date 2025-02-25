@@ -54,19 +54,39 @@ checkboxes.forEach((el) => {
   })
 })
 
+
+function removeLi(el) {
+  return (
+    el.addEventListener('click', async (ev) => {
+      el.parentNode.remove();
+      console.log(el.parentNode.dataset.uuid);
+      let response = await fetch('/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({uuid: el.parentNode.dataset.uuid}),
+        })
+    })
+  )
+}
+
 const deleteButtons = document.querySelectorAll('.delete-button')
 deleteButtons.forEach((el) => {
-  el.addEventListener('click', async (ev) => {
-    el.parentNode.remove();
-    console.log(el.parentNode.dataset.uuid);
-    let response = await fetch('/delete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({uuid: el.parentNode.dataset.uuid}),
-      })
-  })
+
+  removeLi(el)
+
+  // el.addEventListener('click', async (ev) => {
+  //   el.parentNode.remove();
+  //   console.log(el.parentNode.dataset.uuid);
+  //   let response = await fetch('/delete', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({uuid: el.parentNode.dataset.uuid}),
+  //     })
+  // })
 })
 
 const addLiButton = document.querySelector('.add-li-button');
@@ -84,9 +104,10 @@ inputAdd.onsubmit = async (e) => {
     const button = document.createElement('button');
     liItem.appendChild(button);
     button.classList.add('delete-button');
-    button.innerHTML = 'удалить'
+    button.innerHTML = 'удалить';
+    removeLi(button);
     liItem.append(inputField.value);
-    toDoUl.appendChild(liItem);
+    toDoUl.appendChild(liItem); 
     liItem.addEventListener("click", (ev) => {
       if (!ev.target.classList.contains('li__checkbox')) {
         liItem.classList.toggle("done")
