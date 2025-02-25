@@ -81,9 +81,10 @@ inputAdd.onsubmit = async (e) => {
     const liItem = document.createElement('li');
     const checkbox = createCheckbox();
     liItem.appendChild(checkbox);
-    const button = createElement('button');
+    const button = document.createElement('button');
     liItem.appendChild(button);
-    button.classList.add(delete-button);
+    button.classList.add('delete-button');
+    button.innerHTML = 'удалить'
     liItem.append(inputField.value);
     toDoUl.appendChild(liItem);
     liItem.addEventListener("click", (ev) => {
