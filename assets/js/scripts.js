@@ -6,34 +6,16 @@ list.forEach(async (el) => {
         let liDataDone = {
           done: el.classList.contains('done'),
           uuid: el.dataset.uuid,
-        }
-
+        };
         let response = await fetch('/done', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(liDataDone),
-        })
-
-      }
-      
+        });
+      };
     });
-
-
-
-
-    // let response = await fetch('/checkCreate', {
-    //   method: "POST",
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({uuid: el.dataset.uuid}),
-    // })
-
-    // response = await response.json();
-    // console.log(response);
-    // checkbox.checked = response.checked;
 })
 
 const checkboxes = document.querySelectorAll('.li__checkbox')
@@ -73,20 +55,7 @@ function removeLi(el) {
 
 const deleteButtons = document.querySelectorAll('.delete-button')
 deleteButtons.forEach((el) => {
-
-  removeLi(el)
-
-  // el.addEventListener('click', async (ev) => {
-  //   el.parentNode.remove();
-  //   console.log(el.parentNode.dataset.uuid);
-  //   let response = await fetch('/delete', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({uuid: el.parentNode.dataset.uuid}),
-  //     })
-  // })
+  removeLi(el);
 })
 
 const addLiButton = document.querySelector('.add-li-button');
