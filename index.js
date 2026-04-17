@@ -9,12 +9,34 @@ const {v4 : uuidv4} = require('uuid');
 const connectionUrl = 'mongodb://localhost:27017/toDo';
 mongoose.connect(connectionUrl);
 
-const actionSchema = {
-    uuid: String,
-    action: String,
-    checked: Boolean,
-    done: Boolean,
-}
+const actionSchema = new mongoose.Schema({
+    uuid: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    action: {
+        type: String,
+        required: true,
+        trim: true,
+        minlength: [1, 'Должно содержать хотя бы 1 символ']
+    },
+    checked: {
+        type: Boolean,
+        default: false
+    },
+    done: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+}, {
+        timestamps: true
+    }
+)
 
 const Action = mongoose.model('actions', actionSchema) 
 
@@ -34,24 +56,34 @@ app.get('/', async function(request, response) {
     response.render('main', data);
 })
 
-app.post('/add', function(request, response) {
+app.post('/add', async function(request, response) {
     try {
-        let obj = request.body;
+        const {inputField} = request.body;
+
+        if (!inputField || inputField.trim() === '') {
+            return response.status(400).json({ error: 'Поле не должно быть пустым' })
+        }
+
+        if (inputField.length > 100) {
+            return response.status(400).json({ error: 'Слишком длинное действие'})
+        }
+
         let uuid = uuidv4()
         let res = {
             uuid: uuid,
         }
         let newAction = new Action({
             uuid: uuid,
-            action: obj.inputField,
+            action: inputField,
             checked: false,
-            done: false, 
+            done: false,
         })
 
-        newAction.save();
+        await newAction.save();
         response.json(res)
     } catch(err) {
         console.log(err)
+        response.status(500).json({ error: err.message })
     }
 })
 
@@ -64,17 +96,29 @@ app.post('/check', async function(request, response) {
 })
 
 app.post('/checkCreate', async function(request, response) {
-    let res = await Action.find({uuid: request.body.uuid})
+    const uuids = request.body;
+
+    if (!Array.isArray(uuids) || uuids.length === 0) {
+        return response.status(400).json({
+            error: 'Нужен массив uuids для удаления'
+        })
+    }
+
+    const res = await Action.find({uuid: uuids})
+
+
     response.json(res[0].checked)
 })
 
 app.post('/deleteAll', async function(request, response) {
-    let mass = []
-    await Action.deleteMany({uuid: request.body})
+    const uuids = request.body.uuids;
+    if (!uuids || uuids.length === 0) {
+        return response.status(400).json({error: 'Нет uuid для удаления'})
+    }
+    await Action.deleteMany({uuid: {$in: uuids} })
 })
 
 app.post('/completeAll', async function(request, response) {
-    let mass = []
     await Action.updateMany({checked: true}, {$set: {done: true}})
 })
 
@@ -83,4 +127,4 @@ app.post('/delete', async function(request, response) {
 })
 
 
-app.listen(3000, () => console.log('/huynya zapustilasb'))
+app.listen(3000, () => console.log('/server is running'))
