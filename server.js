@@ -5,9 +5,13 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const upload = multer();
 const {v4 : uuidv4} = require('uuid');
+const res = require("express/lib/response");
+const cors = require('cors');
+
 
 const connectionUrl = 'mongodb://localhost:27017/toDo';
 mongoose.connect(connectionUrl);
+
 
 const actionSchema = new mongoose.Schema({
     uuid: {
@@ -50,6 +54,18 @@ app.use(express.json())
 
 app.use(express.urlencoded({ extended: true }))
 
+app.use(cors());
+
+app.get('/api/tasks', async function(request, response) {
+try {
+    const tasks = await Action.find().sort({ createdAt: -1 });
+    response.json(tasks);
+} catch (err) {
+    console.log(err);
+    response.status(500).json({error: err.message});
+}
+})
+
 app.get('/', async function(request, response) {
     const ulActions = Array.from(await Action.find());
     const data = {ulActions : ulActions}
@@ -89,10 +105,17 @@ app.post('/add', async function(request, response) {
 
 app.post('/done', async function(request, response) {
     await Action.updateOne({uuid: request.body.uuid}, {$set: {done: request.body.done}})
+    response.json({ success: true })
 })
 
 app.post('/check', async function(request, response) {
     await Action.updateOne({uuid: request.body.uuid}, {$set: {checked: request.body.checked}})
+    response.json({ success: true })
+})
+
+app.post('/delete', async function(request, response) {
+    await Action.deleteOne({uuid: request.body.uuid})
+    response.json({ success: true })
 })
 
 app.post('/checkCreate', async function(request, response) {
@@ -110,21 +133,24 @@ app.post('/checkCreate', async function(request, response) {
     response.json(res[0].checked)
 })
 
-app.post('/deleteAll', async function(request, response) {
+app.post('/deleteAllChecked', async function(request, response) {
     const uuids = request.body.uuids;
     if (!uuids || uuids.length === 0) {
         return response.status(400).json({error: 'Нет uuid для удаления'})
     }
     await Action.deleteMany({uuid: {$in: uuids} })
+    response.json({ Deleted: uuids.length})
 })
 
-app.post('/completeAll', async function(request, response) {
-    await Action.updateMany({checked: true}, {$set: {done: true}})
+app.post('/completeAllChecked', async function(request, response) {
+    const { uuids } = request.body;
+    await Action.updateMany(
+        {uuid: {$in: uuids}},
+        {$set: {done: true}}
+    )
+    // response.json({ Updated: uuids.length})
 })
 
-app.post('/delete', async function(request, response) {
-    await Action.deleteOne({uuid: request.body.uuid})
-})
 
 
 app.listen(3000, () => console.log('/server is running'))
