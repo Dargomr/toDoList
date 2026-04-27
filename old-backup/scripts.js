@@ -73,7 +73,6 @@ inputAdd.onsubmit = async (e) => {
     button.classList.add('delete-button');
     button.innerHTML = 'удалить';
     removeLi(button);
-    // liItem.append(inputField.value);
     const textNode = document.createElement('p');
     textNode.textContent = inputField.value;
     liItem.appendChild(textNode);
@@ -96,7 +95,7 @@ inputAdd.onsubmit = async (e) => {
     }
     response = await response.json();
     liItem.dataset.uuid = response.uuid
-
+    inputField.value = ''
 
   } else {
     errorMsg.classList.add('error-msg_active');
@@ -124,26 +123,37 @@ deleteAllChecked.addEventListener("click", async () => {
       el.parentNode.remove();
     }
   })
-  let response = await fetch('/deleteAll', {
+  let response = await fetch('/deleteAllChecked', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({uuids: uuids}),
   })
+  
 })
 
 completeAllChecked.addEventListener('click', async () => {
-  let mas = [];
-  Array.from(document.getElementsByClassName('li__checkbox')).forEach((el) => {
-    if(el.checked) {
-      mas.push(el.parentNode.dataset.uuid, el.parentNode.classList.contains('done'))
-      el.parentNode.classList.add('done')
+  let uuids = [];
+  Array.from(document.getElementsByClassName('li__checkbox')).forEach((checkbox) => {
+    if(checkbox.checked) {
+      uuids.push(checkbox.parentNode.dataset.uuid)
+      checkbox.parentNode.classList.add('done')
     }
   })
-  let response = await fetch('/completeAll', {
+  let response = await fetch('/completeAllChecked', {
     method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({uuids: uuids}),
   })
+  if (!response.ok) {
+    console.log('ошибка сервера: ', response.status)
+    uuids.forEach(  (uuid) => {
+      const li = document.querySelector(`li[data-uuid=${uuid}]`);
+      if (li) li.classList.remove('done');
+    })
+    alert('Не удалось обновить задачи')
+  }
 })
 
 
