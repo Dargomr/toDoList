@@ -1,4 +1,3 @@
-
 <template>
   <div id="app">
     <nav class="navbar">
@@ -8,18 +7,17 @@
       </div>
     </nav>
     <main class="main-content">
-      <router-view/>
+      <router-view />
     </main>
   </div>
 </template>
 
-
 <script setup>
+// ничего
 import { ref } from 'vue'
 import { useTaskStore } from './stores/taskStore.js'
 
 const taskStore = useTaskStore()
-
 </script>
 
 <style scoped>
@@ -33,8 +31,8 @@ body {
   font-family: sans-serif;
   background: deeppink;
   min-height: 100vh;
-  margin: 0;      /* Добавьте */
-  padding: 0;     /* Добавьте */
+  margin: 0; /* Добавьте */
+  padding: 0; /* Добавьте */
 }
 
 #app {
@@ -43,7 +41,7 @@ body {
 
 .navbar {
   background-color: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem 2rem;
 }
 
@@ -82,5 +80,3 @@ body {
   justify-content: center;
 }
 </style>
-
-
