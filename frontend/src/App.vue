@@ -13,7 +13,6 @@
 </template>
 
 <script setup>
-// ничего
 import { ref } from 'vue'
 import { useTaskStore } from './stores/taskStore.js'
 
