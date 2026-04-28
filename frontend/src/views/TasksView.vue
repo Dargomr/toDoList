@@ -6,16 +6,48 @@
         <button class="delete-all-checked">delete all checked</button>
         <button class="complete-all-checked">complete all checked</button>
       </div>
-      <form class="input-add" id ='inputAdd' name ='inputAdd' @submit.prevent="addNewTask">
-        <input class="input-field" type="text" name="inputField" v-model="newTaskText"/>
-        <button class="add-li-button" type="submit">Add</button>
+      <form
+        class="input-add"
+        id="inputAdd"
+        name="inputAdd"
+        @submit.prevent="addNewTask"
+      >
+        <input
+          class="input-field"
+          type="text"
+          name="inputField"
+          v-model="newTaskText"
+        />
+        <button
+          class="add-li-button"
+          type="submit"
+        >
+          Add
+        </button>
       </form>
 
-      <p v-if="errorMsg" class="error-msg_active">{{errorMsg}}</p>
-      <p v-if="taskStore.loading" class="loading">Loading</p>
+      <p
+        v-if="errorMsg"
+        class="error-msg_active"
+      >
+        {{ errorMsg }}
+      </p>
+      <p
+        v-if="taskStore.loading"
+        class="loading"
+      >
+        Loading
+      </p>
 
-      <ul v-else class="to-do__ul">
-        <TaskItem v-for="task in taskStore.tasks" :key="task.uuid" :task="task"/>
+      <ul
+        v-else
+        class="to-do__ul"
+      >
+        <TaskItem
+          v-for="task in taskStore.tasks"
+          :key="task.uuid"
+          :task="task"
+        />
       </ul>
       <p v-if="taskStore.tasks.length === 0 && !taskStore.loading">add first task!</p>
     </div>
@@ -23,7 +55,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { useTaskStore } from '../stores/taskStore.js'
 import TaskItem from '../components/TaskItem.vue'
@@ -38,7 +70,7 @@ onMounted(() => {
 
 async function addNewTask() {
   if (!newTaskText.value.trim()) {
-    errorMsg.value = 'Введите задачу';
+    errorMsg.value = 'Введите задачу'
     setTimeout(() => {
       errorMsg.value = ''
     }, 2000)
@@ -57,17 +89,14 @@ async function addNewTask() {
     }, 2000)
   }
 }
-
 </script>
 
-
 <style scoped>
-
 .tasks-view {
   min-width: 80%;
   margin: 0 auto;
   padding: 20px;
- }
+}
 
 .header {
   text-align: center;
@@ -128,6 +157,5 @@ button {
   width: 100%;
   display: flex;
   box-sizing: border-box;
-
 }
 </style>
