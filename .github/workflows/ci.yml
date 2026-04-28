@@ -36,5 +36,5 @@ jobs:
 
       - name: Install Backend Dependencies
         run: |
-          npm ci # если у тебя package.json в корне
+          npm ci
 
