@@ -6,6 +6,7 @@
         <router-link to="/">Все задачи</router-link>
       </div>
     </nav>
+    <!--проверка-->
     <main class="main-content">
       <router-view />
     </main>
