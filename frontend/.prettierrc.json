@@ -3,5 +3,9 @@
   "semi": false,
   "singleQuote": true,
   "printWidth": 80,
-  "singleAttributePerLine": true
+  "singleAttributePerLine": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "bracketSameLine": false,
+  "vueIndentScriptAndStyle": true
 }

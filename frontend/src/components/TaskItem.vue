@@ -1,47 +1,54 @@
 <template>
-  <li :class="{done: task.done}" @click="onLiClick">
-  <input type="checkbox" class="li-checkbox" :checked="task.checked" @change="onCheckboxChange"/>
-  <p class="task-text">{{task.action}}</p>
-  <button class="delete-button"  @click="onDeleteClick">удалить</button>
+  <li
+    :class="{ done: task.done }"
+    @click="onLiClick"
+  >
+    <input
+      type="checkbox"
+      class="li-checkbox"
+      :checked="task.checked"
+      @change="onCheckboxChange"
+    />
+    <p class="task-text">{{ task.action }}</p>
+    <button
+      class="delete-button"
+      @click="onDeleteClick"
+    >
+      удалить
+    </button>
   </li>
 </template>
 
 <script setup>
-import {useTaskStore} from '../stores/taskStore.js'
+  import { useTaskStore } from '../stores/taskStore.js'
 
-const taskStore = useTaskStore()
+  const taskStore = useTaskStore()
 
-const props = defineProps({
-  task: {
-    type: Object,
-    required: true
+  const props = defineProps({
+    task: {
+      type: Object,
+      required: true,
+    },
+  })
+
+  function onLiClick(event) {
+    if (!event.target.matches('.li-checkbox, .delete-button')) {
+      taskStore.toggleDone(props.task)
+    }
   }
-})
 
-function onLiClick (event) {
-  if (!event.target.matches('.li-checkbox, .delete-button')) {
-    taskStore.toggleDone(props.task)
+  function onCheckboxChange(event) {
+    if (event.target.matches('.li-checkbox')) {
+      taskStore.toggleCheck(props.task, event.target.checked)
+    }
   }
-}
 
-function onCheckboxChange(event) {
-  if (event.target.matches('.li-checkbox')) {
-    props.task.checked = event.target.checked
-    taskStore.toggleCheck(props.task)
+  function onDeleteClick(event) {
+    if (event.target.matches('.delete-button')) {
+      taskStore.deleteTask(props.task.uuid)
+    }
   }
-}
-
-function onDeleteClick(event) {
-  if (event.target.matches('.delete-button')) {
-    taskStore.deleteTask(props.task.uuid)
-
-  }
-}
-
-
-
 </script>
-
 
 <style scoped>
   li {
@@ -64,7 +71,7 @@ function onDeleteClick(event) {
   }
 
   li.done::before {
-    content: "";
+    content: '';
     position: absolute;
     border-color: #009933;
     border-style: solid;

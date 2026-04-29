@@ -24,17 +24,18 @@ jobs:
           cd frontend
           npm ci  
 
-      - name: Lint Frontend
+      - name: Check Code Style with EsLint
         run: |
           cd frontend
-          npm run 
+          npm run lint:check
+
+      - name: Check Code Style with Prettier
+        run: |
+          cd frontend
+          npm run format:check
 
       - name: Build Frontend
         run: |
           cd frontend
           npm run build 
-
-      - name: Install Backend Dependencies
-        run: |
-          npm ci
 
