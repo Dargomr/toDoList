@@ -22,7 +22,7 @@ jobs:
       - name: Install Frontend Dependencies
         run: |
           cd frontend
-          npm ci  
+          npm ci --no-cache 
 
       - name: Check Code Style with EsLint
         run: |
